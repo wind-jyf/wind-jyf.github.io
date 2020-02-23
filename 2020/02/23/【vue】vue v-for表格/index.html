@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="实现通过向后台请求数据来显示在表格里以及删除前端代码如下： 123456789101112131415161718192021222324&lt;template&gt;  &lt;div&gt;  &lt;center&gt;  &lt;table class&#x3D;&quot;table table-bordered&quot;&gt;  &lt;thead&gt;    &lt;tr&gt;      &lt;th&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【vue】vue v-for表格">
+<meta property="og:url" content="http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/index.html">
+<meta property="og:site_name" content="jyf blog">
+<meta property="og:description" content="实现通过向后台请求数据来显示在表格里以及删除前端代码如下： 123456789101112131415161718192021222324&lt;template&gt;  &lt;div&gt;  &lt;center&gt;  &lt;table class&#x3D;&quot;table table-bordered&quot;&gt;  &lt;thead&gt;    &lt;tr&gt;      &lt;th&amp;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-23T08:59:26.156Z">
+<meta property="article:modified_time" content="2020-02-14T13:07:06.000Z">
+<meta property="article:author" content="wind-jyf">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【vue】vue v-for表格</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/02/23/%E3%80%90vue%E3%80%91%E4%BD%BF%E7%94%A8vue.js%E5%AE%9E%E7%8E%B0%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/" target="_blank" rel="noopener"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&text=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&is_video=false&description=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【vue】vue v-for表格&body=Check out this article: http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&name=【vue】vue v-for表格&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#实现通过向后台请求数据来显示在表格里以及删除"><span class="toc-number">1.</span> <span class="toc-text">实现通过向后台请求数据来显示在表格里以及删除</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【vue】vue v-for表格
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">jyf blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-02-23T08:59:26.156Z" itemprop="datePublished">2020-02-23</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="实现通过向后台请求数据来显示在表格里以及删除"><a href="#实现通过向后台请求数据来显示在表格里以及删除" class="headerlink" title="实现通过向后台请求数据来显示在表格里以及删除"></a>实现通过向后台请求数据来显示在表格里以及删除</h1><p><em>前端代码如下：</em></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">center</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">table</span> <span class="attr">class</span>=<span class="string">"table table-bordered"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">thead</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">th</span>&gt;</span>#<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">th</span>&gt;</span>单词<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">th</span>&gt;</span>释义<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">th</span>&gt;</span>操作<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tbody</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span> <span class="attr">v-for</span>=<span class="string">"(word,index) in words"</span> <span class="attr">:key</span>=<span class="string">"index"</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;index+1&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;word.word&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;word.translate&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"primary"</span> <span class="attr">class</span>=<span class="string">"btn btn-danger"</span>  @<span class="attr">click</span>=<span class="string">"handle(index)"</span>&gt;</span>删除<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; Message &#125; <span class="keyword">from</span> <span class="string">'element-ui'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; request &#125; <span class="keyword">from</span> <span class="string">'../../network'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data()&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      words:[]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods:&#123;</span><br><span class="line">    handle(index)&#123;</span><br><span class="line">      <span class="keyword">const</span> data=&#123;</span><br><span class="line">        index:index</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      request(&#123;</span><br><span class="line">        url:<span class="string">'/list'</span>,</span><br><span class="line">        method:<span class="string">'post'</span>,</span><br><span class="line">        data:data</span><br><span class="line">      &#125;)</span><br><span class="line">      .then(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">        Message.success(<span class="string">"删除成功"</span>);</span><br><span class="line">        request(&#123;</span><br><span class="line">        url:<span class="string">'/list'</span></span><br><span class="line">        &#125;)</span><br><span class="line">        .then(<span class="function">(<span class="params">res</span>)=&gt;</span>&#123;</span><br><span class="line">          <span class="keyword">this</span>.words=res.data.words;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="keyword">this</span>.words);</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  created()&#123;</span><br><span class="line">    request(&#123;</span><br><span class="line">      url:<span class="string">'/card'</span></span><br><span class="line">    &#125;)</span><br><span class="line">    .then(<span class="function">(<span class="params">res</span>)=&gt;</span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.words=res.data.words;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>注：</strong></p>
+<ul>
+<li>使用v-for进行遍历，一定要有key</li>
+<li>在组件开始创建时便请求数据，进行显示（生命周期）</li>
+<li>由于请求是异步的，所以在删除的时候，当再次请求数据时，一定要放在删除请求的回调函数中，而不是将代码并行放到下面</li>
+</ul>
+<p><em>后端代码</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> bodyParser = <span class="built_in">require</span>(<span class="string">'body-parser'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建了一个app对象</span></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line">app.use(<span class="built_in">require</span>(<span class="string">'cors'</span>)())  <span class="comment">//解决跨域的问题</span></span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/card'</span>,(req,res)=&gt;&#123;</span><br><span class="line">    fs.readFile(<span class="string">'./db.json'</span>,<span class="string">'utf-8'</span>,(err,data)=&gt;&#123;</span><br><span class="line">        res.send(data);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;),</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/list'</span>,(req,res)=&gt;&#123;</span><br><span class="line">    fs.readFile(<span class="string">'./db.json'</span>,<span class="string">'utf-8'</span>,(err,data)=&gt;&#123;</span><br><span class="line">        res.send(data);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;),</span><br><span class="line"></span><br><span class="line">app.post(<span class="string">'/list'</span>,(req,res)=&gt;&#123;          </span><br><span class="line">    <span class="keyword">let</span> index = req.body.index;   <span class="comment">//通过索引进行删除</span></span><br><span class="line">    <span class="built_in">console</span>.log(index);</span><br><span class="line">    fs.readFile(<span class="string">'./db.json'</span>,<span class="string">'utf-8'</span>,(err,data)=&gt;&#123;</span><br><span class="line">        <span class="keyword">if</span>(err)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"文件读取失败"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> list = <span class="built_in">JSON</span>.parse(data).words;</span><br><span class="line">            list.splice(index,<span class="number">1</span>);</span><br><span class="line">            <span class="built_in">console</span>.log(list);</span><br><span class="line">            <span class="keyword">let</span> json = <span class="built_in">JSON</span>.stringify(&#123;<span class="attr">words</span>:list&#125;);</span><br><span class="line">            fs.writeFile(<span class="string">'./db.json'</span>,json,(err,data)=&gt;&#123;</span><br><span class="line">                <span class="keyword">if</span>(err)&#123;</span><br><span class="line">                    <span class="built_in">console</span>.log(<span class="string">"写入失败"</span>);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="built_in">console</span>.log(data);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    res.send(<span class="string">"okkk"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>,()=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"服务器正在running"</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ul>
+<li>post请求：在进行删除的时候，由前端返回索引到后端，通过splice函数进行删除</li>
+<li>get请求：后端读取文件返回数据给后台</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>其实较难的知识点没有什么，熟悉运用v-for</li>
+<li>axios封装、请求操作</li>
+<li>生命周期</li>
+<li>数组相关操作</li>
+<li>node的post，get相关请求，以及读文件，字符串以及数组之间的转化</li>
+</ul>
+<hr>
+<p><em>by 江羽凤</em></p>
+<p><em>END</em></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#实现通过向后台请求数据来显示在表格里以及删除"><span class="toc-number">1.</span> <span class="toc-text">实现通过向后台请求数据来显示在表格里以及删除</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&text=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&is_video=false&description=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【vue】vue v-for表格&body=Check out this article: http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&title=【vue】vue v-for表格" target="_blank" rel="noopener"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/02/23/%E3%80%90vue%E3%80%91vue%20v-for%E8%A1%A8%E6%A0%BC/&name=【vue】vue v-for表格&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 wind-jyf
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+

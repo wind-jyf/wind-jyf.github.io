@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="数据寄存器 AX   BX    也可以被当做位偏移地址寄存器 CX     也可以有其他作用 DX      AX,DX 用来处理数据 通用寄存器 AX&#x3D;AH + AL BX&#x3D;BH + BL CX&#x3D;CH + CL DX&#x3D;DH + dl 16位寄存器各自分割为2个互相独立的八位寄存器 运算时，有可能会超过寄存器表示的最大值，存放到其他地方去了 地址寄存器     段地址寄存器 ：偏移地址寄存器 ​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【汇编】寄存器简介">
+<meta property="og:url" content="http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="jyf blog">
+<meta property="og:description" content="数据寄存器 AX   BX    也可以被当做位偏移地址寄存器 CX     也可以有其他作用 DX      AX,DX 用来处理数据 通用寄存器 AX&#x3D;AH + AL BX&#x3D;BH + BL CX&#x3D;CH + CL DX&#x3D;DH + dl 16位寄存器各自分割为2个互相独立的八位寄存器 运算时，有可能会超过寄存器表示的最大值，存放到其他地方去了 地址寄存器     段地址寄存器 ：偏移地址寄存器 ​">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-23T08:59:26.268Z">
+<meta property="article:modified_time" content="2020-02-22T04:59:08.000Z">
+<meta property="article:author" content="wind-jyf">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【汇编】寄存器简介</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8(%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE)/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/" target="_blank" rel="noopener"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&text=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&is_video=false&description=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【汇编】寄存器简介&body=Check out this article: http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&name=【汇编】寄存器简介&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【汇编】寄存器简介
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">jyf blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-02-23T08:59:26.268Z" itemprop="datePublished">2020-02-23</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>数据寄存器</p>
+<p>AX  </p>
+<p>BX    也可以被当做位偏移地址寄存器</p>
+<p>CX     也可以有其他作用</p>
+<p>DX      AX,DX 用来处理数据</p>
+<p>通用寄存器</p>
+<p>AX=AH + AL</p>
+<p>BX=BH + BL</p>
+<p>CX=CH + CL</p>
+<p>DX=DH + dl</p>
+<p>16位寄存器各自分割为2个互相<strong>独立</strong>的八位寄存器</p>
+<p>运算时，有可能会超过寄存器表示的最大值，存放到其他地方去了</p>
+<p>地址寄存器     段地址寄存器 ：偏移地址寄存器</p>
+<p>​                            DS                        SP</p>
+<p>​                            ES                         BP</p>
+<p>​                            SS                         SI</p>
+<p>​                            CS                         DI</p>
+<p>​                                                          IP</p>
+<p>​                                                          BX</p>
+<p>组合规则</p>
+<p>段地址*16H+偏移地址=物理地址</p>
+<p>8086CPU有20根地址线</p>
+<p>CPU是如何区分指令和数据的</p>
+<p>指令长度和IP有关</p>
+<p>u指令    将某个内存地址   开始的字节  全部当做指令（机器码翻译成汇编指令）</p>
+<p>d指令    将某个内存地址开始的字节      全部当做数据</p>
+<p>r指令     可以查看寄存器的内容，并修改</p>
+<p>a指令     写入以及修改汇编指令</p>
+<p>t指令      执行CS：IP指向的指令</p>
+<p>e指令     修改机器码，还可以用双引号修改ASCII码</p>
+<p>段地址寄存器 和偏移地址寄存器</p>
+<p>IP寄存器和指令有关</p>
+<p>8086CPU中在任意时刻，CPU将CS，IP所指的内容全部当做指令来执行。</p>
+<p>用e指令可以输入机器码，存入到内存中</p>
+<p>然后可以使用d指令以及u指令查看</p>
+<p>此时并没有执行，若想将这些当做指令执行</p>
+<p>使用r指令，改变CS和IP将它指向刚刚输入的地址，此时输入的机器码，就会被当做指令执行</p>
+<p>指令是有长度的 一条指令可以由多个字节构成</p>
+<p>指令的执行过程：</p>
+<ol>
+<li>CPU从CS:IP所指向的内存单元读取指令，存放到指令缓存区中</li>
+<li>IP=IP + 所读指令的长度（字节），从而指向下一条指令（两位十六进制是一个字节）</li>
+<li>执行指令缓存器中的内容，回到第一步</li>
+</ol>
+<p>转移指令，可以修改CS:IP</p>
+<p>jmp 2000:0</p>
+<p>jmp 寄存器</p>
+<p>call     将改变了的IP保存了起来（保存到内存中）</p>
+<p>call指令也是一条转移指令</p>
+<p>入栈和出栈指令只操作字型数据，不操作字节型数据</p>
+<p>在8086CPU中，在任意时刻，将段地址寄存器SS和偏移地址寄存器SP所组合出来的内存地址当做栈顶标记！</p>
+<p>push AX             修改寄存器中的数值  SP=SP-2</p>
+<p>​                            将AX中的字型数据 -&gt;SS:SP所组合出来的内存地址中</p>
+<p>pop BX                  SS:SP所组合出来的内存地址中的值存放到BX中</p>
+<p>​                                SP=SP+2</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&text=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&is_video=false&description=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【汇编】寄存器简介&body=Check out this article: http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&title=【汇编】寄存器简介" target="_blank" rel="noopener"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/&name=【汇编】寄存器简介&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 wind-jyf
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
