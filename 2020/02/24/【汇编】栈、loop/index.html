@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="内存段的安全  数据段 代码段 栈段 随意地向某一段内存空间中写入内容是非常危险的 向安全的内存空间去写入内容 0:200~0:2FFH 256个字节 在操作系统的环境中，合法地通过操作系统所取得的内存空间都是安全的 操作系统就是干管理内存的作用的 取得空间的方法： 一种是系统加载程序时因为程序分配的内存空间 一种是程序在执行的过程中 向系统再去申请内容（不用） 伪指令（告诉编译器，也就是翻译软件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【汇编】栈、loop">
+<meta property="og:url" content="http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/index.html">
+<meta property="og:site_name" content="jyf blog">
+<meta property="og:description" content="内存段的安全  数据段 代码段 栈段 随意地向某一段内存空间中写入内容是非常危险的 向安全的内存空间去写入内容 0:200~0:2FFH 256个字节 在操作系统的环境中，合法地通过操作系统所取得的内存空间都是安全的 操作系统就是干管理内存的作用的 取得空间的方法： 一种是系统加载程序时因为程序分配的内存空间 一种是程序在执行的过程中 向系统再去申请内容（不用） 伪指令（告诉编译器，也就是翻译软件">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-24T09:22:16.163Z">
+<meta property="article:modified_time" content="2020-03-02T15:02:40.717Z">
+<meta property="article:author" content="wind-jyf">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【汇编】栈、loop</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/03/04/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%A8%8B/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2020/02/23/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E5%AF%84%E5%AD%98%E5%99%A8%E7%AE%80%E4%BB%8B/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/" target="_blank" rel="noopener"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&text=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&is_video=false&description=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【汇编】栈、loop&body=Check out this article: http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&name=【汇编】栈、loop&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【汇编】栈、loop
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">jyf blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-02-24T09:22:16.163Z" itemprop="datePublished">2020-02-24</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>内存段的安全 </p>
+<p>数据段 代码段 栈段</p>
+<p>随意地向某一段内存空间中写入内容是非常危险的</p>
+<p>向安全的内存空间去写入内容</p>
+<p>0:200~0:2FFH</p>
+<p>256个字节</p>
+<p>在操作系统的环境中，合法地通过操作系统所取得的内存空间都是安全的</p>
+<p>操作系统就是干管理内存的作用的</p>
+<p>取得空间的方法：</p>
+<p>一种是系统加载程序时因为程序分配的内存空间</p>
+<p>一种是程序在执行的过程中 向系统再去申请内容（不用）</p>
+<p>伪指令（告诉编译器，也就是翻译软件，这里怎么翻译，那里怎么翻译）：</p>
+<p>data segment</p>
+<p>stack segment</p>
+<p>code segment</p>
+<p>编译 nasm asm-&gt;obj</p>
+<p>链接 link   obj-&gt;exe</p>
+<p>start 伪指令 是告诉翻译软件    start伪指令在exe文件的描述信息中扮演什么的角色？</p>
+<p>就是将我们设置的程序入口地址在哪里 记录在exe文件的描述信息中</p>
+<p>然后系统通过这个描述文件的内容去设置 CS:IP,当然还有一些其他内容</p>
+<p>最后两行程序是返回的功能</p>
+<p>系统在加载程序的时候给程序分配内存 设置寄存器</p>
+<p>内存和寄存器在程序结束后都需要还给系统，否则就永远占用了内存，内存是有限的，直到最终，系统没有内存。</p>
+<p>CX等于程序的长度</p>
+<p>用p执行int指令</p>
+<p>loop指令两个步骤：</p>
+<ol>
+<li>CX=CX-1</li>
+<li>判断CX中的值，不为0则跳转到标号位置继续执行，等于0 则执行下面的指令。</li>
+</ol>
+<p>DS：数据从哪里来</p>
+<p>ES：数据到哪里去</p>
+<p>一点自己的小感悟：</p>
+<p>计算机如何区 分指令，它将cs:ip指向的内存单元当做指令</p>
+<p>但CS寄存器同时拥有自己的内存单元，CS:[BX]发生变化，不代表CS所指向的位置发生了变化。</p>
+<p>[bx+数字]形式访问内存</p>
+<p>可以省略寄存器的使用</p>
+<p>[bx+si],[bx+di]</p>
+<p>word ptr</p>
+<p>byte ptr</p>
+<p>div指令    除法指令</p>
+<p>除数：有8位和16位两种，在一个寄存器或内存单元中</p>
+<p>被除数：默认放在AX 或者AX和DX中，</p>
+<p>如果除数为8位，被除数则为16位，默认放在AX中</p>
+<p>如果除数为16位，被除数则为32位，DX存放高16位，AX存放低16位</p>
+<p>结果：如果除数8位，则AL存储除法操作的商，AH存储除法操作的余数</p>
+<p>如果除数为16位，则AX存储除法的商，DX存储除法操作的余数</p>
+<p>dd伪指令  32位</p>
+<p>dw             16位</p>
+<p>db               8位</p>
+<p>dup伪指令</p>
+<p>dd  100 dup(1),代表重复100次字节型数据1</p>
+<p>dw  100 dup(1),代表重复100次字型数据1</p>
+<p>mov ax,[bp]，bp的默认段地址是ss</p>
+<p>mov ax,ds:[bx]</p>
+<p>mov ax,ds:[si]</p>
+<p>mov ax,ds:[di]</p>
+<p>mov ax,ds:[bp]</p>
+<p>mov ax,ds:[bx+si]</p>
+<p>mov ax,ds:[bx+di]</p>
+<p>mov ax,ds:[bp+si]</p>
+<p>mov ax,ds:[bp+di]</p>
+<p>mov ax,ds:[bx+si+5]</p>
+<p>转移指令原理：</p>
+<ol>
+<li>可以修改ip</li>
+<li>同时修改CS和IP</li>
+</ol>
+<p>jmp   无条件指令</p>
+<p>Jmp跳转指令编译后的机器码和指令的长度有关 其实就是指令的长度</p>
+<p>通过这种方式 CPU在执行jmp指令的时候不需要跳转的目的地就可以实现对IP寄存器的修改</p>
+<p>只需要做一个加法就可以了</p>
+<p>标号地址-jmp指令后的第一个自己的地址=机器码所表示的指令长度</p>
+<p>loop   条件指令</p>
+<p>call</p>
+<p>操作符      OFFSET     可获取偏移地址</p>
+<p>jcxz条件转移指令：</p>
+<ol>
+<li>当CX寄存器中的值=0时2进行jmp</li>
+<li>和loop恰好相反</li>
+</ol>
+<p>jmp dword ptr ds:[0]             IP=ds:[0]的字型数据 CS=ds:[2]的字型数据</p>
+<p>在屏幕中间显示不同颜色的字符</p>
+<p>偶数地址   存放字符的ASCII码</p>
+<p>奇数地址   存放字符的颜色</p>
+<p>88个字符</p>
+<p>25行</p>
+<p>jmp 标号</p>
+<p>jmp short 标号</p>
+<p>jmp near  标号</p>
+<p>call</p>
+<p>ret</p>
+<p>ret</p>
+<p>retf</p>
+<p>内存中的字型数据</p>
+<p>当执行ret指令时 相当于执行 pop ip</p>
+<p>当执行retf指令时 相当于执行了 pop IP   pop CS</p>
+<p>call指令：</p>
+<ol>
+<li>push ip</li>
+<li>jmp near ptr 标号</li>
+</ol>
+<p>call far ptr 标号：</p>
+<ol>
+<li>push CS</li>
+<li>push IP</li>
+<li>jmp far ptr 标号</li>
+</ol>
+<p>call 16位寄存器</p>
+<ol>
+<li>push IP</li>
+<li>jmp 16位寄存器          此时的IP跳转到16位寄存器中的字型数据   </li>
+</ol>
+<p>call word ptr 内存单元地址</p>
+<ol>
+<li>push IP</li>
+<li>jmp word ptr 内存单元地址</li>
+</ol>
+<p>call dword ptr 内存单元地址</p>
+<ol>
+<li>push CS</li>
+<li>push IP</li>
+<li>jmp dword ptr 内存单元地址      此时的ip=ds:[0],cs=ds[2]</li>
+</ol>
+<p>实验一的第四题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">data segment</span><br><span class="line">	db 00010010b</span><br><span class="line">data ends</span><br><span class="line">STACKS SEGMENT</span><br><span class="line">    db 128 dup(0)</span><br><span class="line">STACKS ENDS</span><br><span class="line"></span><br><span class="line">CODES SEGMENT</span><br><span class="line">    ASSUME CS:CODES,SS:STACKS</span><br><span class="line">START:</span><br><span class="line">	mov ax,stacks</span><br><span class="line">	mov ss,ax</span><br><span class="line">	mov sp,128   ;设置栈</span><br><span class="line">	</span><br><span class="line">	call init</span><br><span class="line">	</span><br><span class="line">	call input</span><br><span class="line">	sub al,30h</span><br><span class="line">	mov dl,al</span><br><span class="line">	</span><br><span class="line">	call input</span><br><span class="line">	sub al,30h</span><br><span class="line">	mov dh,al</span><br><span class="line">	</span><br><span class="line">	call sum</span><br><span class="line">	</span><br><span class="line">	call show</span><br><span class="line">	</span><br><span class="line">	MOV AH,4CH</span><br><span class="line">    INT 21H</span><br><span class="line">    </span><br><span class="line">;------------------------------</span><br><span class="line">show:</span><br><span class="line">	mov dh,ds:[0]</span><br><span class="line">	add al,30h</span><br><span class="line">	mov dl,al</span><br><span class="line">	mov es:[di],dx</span><br><span class="line">	</span><br><span class="line">	add di,2</span><br><span class="line">	mov al,ah</span><br><span class="line">	mov ah,0h</span><br><span class="line">	mov bl,30H</span><br><span class="line">	div bl</span><br><span class="line">	add ah,30h</span><br><span class="line">	mov dl,ah</span><br><span class="line">	mov es:[di],dx</span><br><span class="line">	</span><br><span class="line">	ret</span><br><span class="line">	</span><br><span class="line">;------------------------------ </span><br><span class="line">sum:</span><br><span class="line">	add dl,dh</span><br><span class="line">	add dl,30h</span><br><span class="line">	mov ah,0h</span><br><span class="line">	mov al,dl</span><br><span class="line">	mov bl,3Ah</span><br><span class="line">	div bl</span><br><span class="line">	</span><br><span class="line">	ret</span><br><span class="line">	</span><br><span class="line">;------------------------------  </span><br><span class="line">input:</span><br><span class="line">	mov ah,1h</span><br><span class="line">	int 21h</span><br><span class="line">	</span><br><span class="line">	ret</span><br><span class="line">;------------------------------  </span><br><span class="line">init:</span><br><span class="line">	mov bx,data</span><br><span class="line">	mov ds,bx</span><br><span class="line">	</span><br><span class="line">	mov bx,0B800H</span><br><span class="line">	mov es,bx</span><br><span class="line">	mov di,160*5+16*2</span><br><span class="line">	</span><br><span class="line">    ret</span><br><span class="line">;------------------------------  </span><br><span class="line">    </span><br><span class="line">CODES ENDS</span><br><span class="line">    END START</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&text=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&is_video=false&description=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【汇编】栈、loop&body=Check out this article: http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&title=【汇编】栈、loop" target="_blank" rel="noopener"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/02/24/%E3%80%90%E6%B1%87%E7%BC%96%E3%80%91%E6%A0%88%E3%80%81loop/&name=【汇编】栈、loop&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 wind-jyf
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
