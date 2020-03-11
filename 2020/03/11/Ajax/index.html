@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Ajax补充知识 get  通过网址 容量小 安全性差 有缓存   post  不通过网址 容量大（2G） 安全性较高 无缓存    写Ajax1.创建Ajax对象1234567var oAjax &#x3D; new XMLHttpRequest();&#x2F;&#x2F;兼容非IE6if(window.XMLHttpRequest)&amp;#123;&#x2F;&#x2F;如果不用window，IE6会报错	var oAjax &#x3D; new XML">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ajax">
+<meta property="og:url" content="http://yoursite.com/2020/03/11/Ajax/index.html">
+<meta property="og:site_name" content="jyf blog">
+<meta property="og:description" content="Ajax补充知识 get  通过网址 容量小 安全性差 有缓存   post  不通过网址 容量大（2G） 安全性较高 无缓存    写Ajax1.创建Ajax对象1234567var oAjax &#x3D; new XMLHttpRequest();&#x2F;&#x2F;兼容非IE6if(window.XMLHttpRequest)&amp;#123;&#x2F;&#x2F;如果不用window，IE6会报错	var oAjax &#x3D; new XML">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-11T12:49:14.443Z">
+<meta property="article:modified_time" content="2020-03-11T16:37:35.672Z">
+<meta property="article:author" content="wind-jyf">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Ajax</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/03/11/cookie/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2020/03/11/%E6%9C%AA%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/11/Ajax/" target="_blank" rel="noopener"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/11/Ajax/&text=Ajax" target="_blank" rel="noopener"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/11/Ajax/&is_video=false&description=Ajax" target="_blank" rel="noopener"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ajax&body=Check out this article: http://yoursite.com/2020/03/11/Ajax/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/11/Ajax/&name=Ajax&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ajax"><span class="toc-number">1.</span> <span class="toc-text">Ajax</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#补充知识"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">补充知识</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#写Ajax"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">写Ajax</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-创建Ajax对象"><span class="toc-number">1.0.0.2.0.1.</span> <span class="toc-text">1.创建Ajax对象</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-连接到服务器"><span class="toc-number">1.0.0.2.0.2.</span> <span class="toc-text">2.连接到服务器</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-接收返回值"><span class="toc-number">1.0.0.2.0.3.</span> <span class="toc-text">3.接收返回值</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-进行封装"><span class="toc-number">1.0.0.2.0.4.</span> <span class="toc-text">4.进行封装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置获得头部信息"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">设置获得头部信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#超时设定"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">超时设定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#补充"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">补充</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Ajax
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">jyf blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-03-11T12:49:14.443Z" itemprop="datePublished">2020-03-11</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h1><h4 id="补充知识"><a href="#补充知识" class="headerlink" title="补充知识"></a>补充知识</h4><ul>
+<li><p>get</p>
+<ul>
+<li>通过网址</li>
+<li>容量小</li>
+<li>安全性差</li>
+<li>有缓存</li>
+</ul>
+</li>
+<li><p>post</p>
+<ul>
+<li>不通过网址</li>
+<li>容量大（2G）</li>
+<li>安全性较高</li>
+<li>无缓存</li>
+</ul>
+</li>
+</ul>
+<h4 id="写Ajax"><a href="#写Ajax" class="headerlink" title="写Ajax"></a>写Ajax</h4><h6 id="1-创建Ajax对象"><a href="#1-创建Ajax对象" class="headerlink" title="1.创建Ajax对象"></a>1.创建Ajax对象</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> oAjax = <span class="keyword">new</span> XMLHttpRequest();<span class="comment">//兼容非IE6</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="built_in">window</span>.XMLHttpRequest)&#123;<span class="comment">//如果不用window，IE6会报错</span></span><br><span class="line">	<span class="keyword">var</span> oAjax = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> oAjax = <span class="keyword">new</span> ActiveXObject(<span class="string">"Microsoft.XMLHTTP"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="2-连接到服务器"><a href="#2-连接到服务器" class="headerlink" title="2.连接到服务器"></a>2.连接到服务器</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//open(方法,文件名，异步传输)</span></span><br><span class="line">oAjax.open(<span class="string">'Get'</span>,<span class="string">'a.txt'</span>,<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>发送请求</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">oAjax.send(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">//send()方法接收一个参数，即要求作为请求主题发送的数据(post时)。</span></span><br><span class="line"><span class="comment">//如果不需要通过请求主题发送数据，则必须传入null</span></span><br><span class="line"><span class="comment">//这次请求是同步的</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="3-接收返回值"><a href="#3-接收返回值" class="headerlink" title="3.接收返回值"></a>3.接收返回值</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">oAjax.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">//oAjax.readyState  与浏览器和服务器的通信，进行到哪一步了</span></span><br><span class="line">    <span class="keyword">if</span>(oAjax.readyState==<span class="number">4</span>)&#123;<span class="comment">//读取完成，不能判断是否成功</span></span><br><span class="line">        <span class="keyword">if</span>(oAjax.status==<span class="number">200</span>)&#123;</span><br><span class="line">            alert(oAjax.responseText)；</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            alert(<span class="string">"失败"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>oAjax.readyState的值：</p>
+<ul>
+<li><p>0,（未初始化），还没有调用open方法</p>
+</li>
+<li><p>1，（载入）已调用send()方法，正在发送请求</p>
+</li>
+<li><p>2，（载入完成）send()方法完成，已收到全部响应内容</p>
+</li>
+<li><p>3，（解析）正在解析响应内容</p>
+</li>
+<li><p>4，（完成）响应内容解析完成，可以在客户端调用了</p>
+</li>
+<li><p>只要值发生变化，就会触发一次readystatechange事件</p>
+</li>
+</ul>
+<p>响应后相关的属性：</p>
+<ul>
+<li>responseText:作为响应主题被返回的文本，也就是读取的值</li>
+<li>responseXML:如果响应的内容是”text/xml”或”application/xml”，这个属性将保存着响应数据的XML DOM文档</li>
+<li>status:响应的HTTP状态</li>
+<li>statusText:HTTP状态的说明</li>
+</ul>
+<h6 id="4-进行封装"><a href="#4-进行封装" class="headerlink" title="4.进行封装"></a>4.进行封装</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajax</span>(<span class="params">url,fnSucc,fnFaild</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">window</span>.XMLHttpRequest)&#123;<span class="comment">//如果不用window，IE6会报错</span></span><br><span class="line">		<span class="keyword">var</span> oAjax = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> oAjax = <span class="keyword">new</span> ActiveXObject(<span class="string">"Microsoft.XMLHTTP"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    oAjax.open(<span class="string">'Get'</span>,url,<span class="literal">true</span>);</span><br><span class="line">    </span><br><span class="line">	oAjax.send();</span><br><span class="line">    </span><br><span class="line">    oAjax.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//oAjax.readyState  与浏览器和服务器的通信，进行到哪一步了</span></span><br><span class="line">        <span class="keyword">if</span>(oAjax.readyState==<span class="number">4</span>)&#123;<span class="comment">//读取完成，不能判断是否成功</span></span><br><span class="line">            <span class="keyword">if</span>(oAjax.status==<span class="number">200</span>)&#123;</span><br><span class="line">                fnSucc(oAjax.responseText)；</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(fnFaild)&#123;</span><br><span class="line">                    fnFaild(oAjax.status);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="设置获得头部信息"><a href="#设置获得头部信息" class="headerlink" title="设置获得头部信息"></a>设置获得头部信息</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oAjax.setReguestHeader(<span class="string">"Myheader"</span>,<span class="string">"Myvalue"</span>);<span class="comment">//设置头部信息</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">oAjax.getReguestHeader(<span class="string">"Myheader"</span>);<span class="comment">//获得指定的</span></span><br><span class="line">oAjax.getAllReguestHeader();<span class="comment">//获得全部</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="超时设定"><a href="#超时设定" class="headerlink" title="超时设定"></a>超时设定</h4><ul>
+<li>timeout属性</li>
+<li>ontimeout事件</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">oAjax.timeout = <span class="number">1000</span>;<span class="comment">//将超时设置为1s</span></span><br><span class="line">oAjax.ontimeout = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">"请求超时"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注：如果在规定的时间内浏览器没有接收到响应，那么就会触发timeout事件</p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><ul>
+<li>用没有定义的变量——报错</li>
+<li>用没有定义的属性——undefined     window.a</li>
+<li>清除缓存：用时间拼接到URL后面使每次的url不同</li>
+</ul>
+<hr>
+<p><strong><em>End</em></strong></p>
+<p><strong><em>by wind-jyf</em></strong></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ajax"><span class="toc-number">1.</span> <span class="toc-text">Ajax</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#补充知识"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">补充知识</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#写Ajax"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">写Ajax</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-创建Ajax对象"><span class="toc-number">1.0.0.2.0.1.</span> <span class="toc-text">1.创建Ajax对象</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-连接到服务器"><span class="toc-number">1.0.0.2.0.2.</span> <span class="toc-text">2.连接到服务器</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-接收返回值"><span class="toc-number">1.0.0.2.0.3.</span> <span class="toc-text">3.接收返回值</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-进行封装"><span class="toc-number">1.0.0.2.0.4.</span> <span class="toc-text">4.进行封装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置获得头部信息"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">设置获得头部信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#超时设定"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">超时设定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#补充"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">补充</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/11/Ajax/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/11/Ajax/&text=Ajax" target="_blank" rel="noopener"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/11/Ajax/&is_video=false&description=Ajax" target="_blank" rel="noopener"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ajax&body=Check out this article: http://yoursite.com/2020/03/11/Ajax/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/11/Ajax/&title=Ajax" target="_blank" rel="noopener"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/11/Ajax/&name=Ajax&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 wind-jyf
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
