@@ -14,7 +14,7 @@
 <meta property="og:description" content="let与constlet let声明的变量只在let命令所在的代码块内有效 var在全局范围内均有效 let不能重复声明，var可以声明多次 for循环计数器很适合用let 不存在变量提升  let代码块有效，var全局有效123456&amp;#123;    let a &#x3D; 0;    var b &#x3D; 1;&amp;#125;console.log(a);&#x2F;&#x2F;ReferenceError: a is not">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-03-06T03:40:47.966Z">
-<meta property="article:modified_time" content="2020-03-11T06:36:48.164Z">
+<meta property="article:modified_time" content="2020-03-12T03:04:13.174Z">
 <meta property="article:author" content="wind-jyf">
 <meta name="twitter:card" content="summary">
     
@@ -158,7 +158,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> PI = <span class="string">"a"</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(PI);  <span class="comment">// ReferenceError: PI is not defined</span></span><br><span class="line">  <span class="keyword">const</span> PI = <span class="string">"3.1415926"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>注：const保证的是变量指向的内存地址保存的数据不允许变动，对于简单类型，值就保存在变量指向的内存地址，但对于复杂类型，变量指向的内存地址其实是保存了一个指向实际数据的指针，const只能保证指向的指针是固定的，但指针指向的数据结构就无法控制</strong></p>
-<h4 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h4><ol>
+<h4 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h4><ul>
 <li><p>var的缺陷</p>
 <ul>
 <li><p>可以重复声明多次</p>
@@ -169,11 +169,7 @@
 </li>
 </ul>
 </li>
-<li><p>剩余参数必须放在最后</p>
-</li>
-<li><p>剩余符号还可以用来展开数组</p>
-</li>
-</ol>
+</ul>
 <hr>
 <p><strong><em>END</em></strong></p>
 <p><strong><em>by wind-jyf</em></strong></p>

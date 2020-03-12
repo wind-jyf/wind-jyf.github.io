@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="解构赋值 左右两边结果必须一样 右边必须是个东西 声明和赋值不能分开（必须在一句话里完成）">
+    <meta name="description" content="解构赋值规则： 左右两边结果必须一样 右边必须是个东西 声明和赋值不能分开（必须在一句话里完成）  剩余运算符123let [a,...b] &#x3D; [1,2,3];console.log(a);&#x2F;&#x2F;1console.log(b);&#x2F;&#x2F;[ 2, 3 ]  注：  剩余参数必须放在最后 剩余符号还可以用来展开数组  解构默认值1let [a &#x3D; 2] &#x3D; [undefined]; &#x2F;&#x2F; a &#x3D; 2  当">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【ES6】解构赋值">
 <meta property="og:url" content="http://yoursite.com/2020/03/11/%E3%80%90ES6%E3%80%91%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/index.html">
 <meta property="og:site_name" content="jyf blog">
-<meta property="og:description" content="解构赋值 左右两边结果必须一样 右边必须是个东西 声明和赋值不能分开（必须在一句话里完成）">
+<meta property="og:description" content="解构赋值规则： 左右两边结果必须一样 右边必须是个东西 声明和赋值不能分开（必须在一句话里完成）  剩余运算符123let [a,...b] &#x3D; [1,2,3];console.log(a);&#x2F;&#x2F;1console.log(b);&#x2F;&#x2F;[ 2, 3 ]  注：  剩余参数必须放在最后 剩余符号还可以用来展开数组  解构默认值1let [a &#x3D; 2] &#x3D; [undefined]; &#x2F;&#x2F; a &#x3D; 2  当">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-03-11T06:46:43.842Z">
-<meta property="article:modified_time" content="2020-03-11T16:38:20.993Z">
+<meta property="article:modified_time" content="2020-03-12T03:25:18.505Z">
 <meta property="article:author" content="wind-jyf">
 <meta name="twitter:card" content="summary">
     
@@ -70,7 +70,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/2020/03/11/%E3%80%90ES6%E3%80%91%E6%95%B0%E7%BB%84/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        <li><a class="icon" href="/2020/03/11/%E3%80%90ES5%E3%80%91%E6%95%B0%E7%BB%84%E8%BF%AD%E4%BB%A3/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
         
         
         <li><a class="icon" href="/2020/03/10/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E4%B8%A4%E6%95%B0%E7%9B%B8%E9%99%A4/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
@@ -100,7 +100,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#解构赋值"><span class="toc-number">1.</span> <span class="toc-text">解构赋值</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#解构赋值"><span class="toc-number">1.</span> <span class="toc-text">解构赋值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#规则："><span class="toc-number">1.0.0.1.</span> <span class="toc-text">规则：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#剩余运算符"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">剩余运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解构默认值"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">解构默认值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对象模型的解构"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">对象模型的解构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#嵌套"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">嵌套</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不完全解构"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">不完全解构</span></a></li></ol></li></ol></li></ol></li></ol>
     </div>
   </span>
 </div>
@@ -134,11 +134,55 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h1 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h1><ul>
+    <h1 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h1><h4 id="规则："><a href="#规则：" class="headerlink" title="规则："></a>规则：</h4><ul>
 <li>左右两边结果必须一样</li>
 <li>右边必须是个东西</li>
 <li>声明和赋值不能分开（必须在一句话里完成）</li>
 </ul>
+<h4 id="剩余运算符"><a href="#剩余运算符" class="headerlink" title="剩余运算符"></a>剩余运算符</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> [a,...b] = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="built_in">console</span>.log(a);<span class="comment">//1</span></span><br><span class="line"><span class="built_in">console</span>.log(b);<span class="comment">//[ 2, 3 ]</span></span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>剩余参数必须放在最后</li>
+<li>剩余符号还可以用来展开数组</li>
+</ol>
+<h4 id="解构默认值"><a href="#解构默认值" class="headerlink" title="解构默认值"></a>解构默认值</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> [a = <span class="number">2</span>] = [<span class="literal">undefined</span>]; <span class="comment">// a = 2</span></span><br></pre></td></tr></table></figure>
+
+<p>当解构模式有匹配结果，但匹配结果是undefined时，会触发默认值作为返回结果</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> [a = <span class="number">3</span>, b = a] = [];     <span class="comment">// a = 3, b = 3</span></span><br><span class="line"><span class="keyword">let</span> [a = <span class="number">3</span>, b = a] = [<span class="number">1</span>];    <span class="comment">// a = 1, b = 1</span></span><br><span class="line"><span class="keyword">let</span> [a = <span class="number">3</span>, b = a] = [<span class="number">1</span>, <span class="number">2</span>]; <span class="comment">// a = 1, b = 2</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>a与b匹配值为undefined，触发默认值</li>
+<li>b触发默认值</li>
+<li>不触发默认值</li>
+</ol>
+<h4 id="对象模型的解构"><a href="#对象模型的解构" class="headerlink" title="对象模型的解构"></a>对象模型的解构</h4><ul>
+<li>属性值必须相等才能匹配</li>
+<li>顺序不用一致</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123;foo,bar&#125; = &#123;<span class="attr">bar</span>:<span class="string">'aaa'</span>,<span class="attr">foo</span>:<span class="string">'bbb'</span>&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(foo);<span class="comment">//bbb</span></span><br><span class="line"><span class="built_in">console</span>.log(bar);<span class="comment">//aaa</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123;<span class="attr">foo</span>:bar&#125; = &#123;<span class="attr">foo</span>:<span class="string">'bbb'</span>&#125;;</span><br><span class="line"><span class="comment">//console.log(foo); 会报错，说foo未定义</span></span><br><span class="line"><span class="built_in">console</span>.log(bar);<span class="comment">//bbb</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="嵌套"><a href="#嵌套" class="headerlink" title="嵌套"></a>嵌套</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">p</span>: [<span class="string">'hello'</span>, &#123;<span class="attr">y</span>: <span class="string">'world'</span>&#125;] &#125;;</span><br><span class="line"><span class="keyword">let</span> &#123;<span class="attr">p</span>: [x, &#123; y &#125;] &#125; = obj;</span><br><span class="line">obj = &#123;<span class="attr">p</span>: [<span class="string">'hello'</span>, &#123;<span class="attr">y</span>: <span class="string">'helo'</span>&#125;] &#125;;</span><br><span class="line"><span class="built_in">console</span>.log(x,y);<span class="comment">//hello world</span></span><br></pre></td></tr></table></figure>
+
+<p>还可以省略值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">p</span>: [<span class="string">'hello'</span>, &#123;<span class="attr">y</span>: <span class="string">'world'</span>&#125;] &#125;;</span><br><span class="line"><span class="keyword">let</span> &#123;<span class="attr">p</span>: [x, &#123;  &#125;] &#125; = obj;</span><br><span class="line"><span class="built_in">console</span>.log(x);<span class="comment">//hello</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="不完全解构"><a href="#不完全解构" class="headerlink" title="不完全解构"></a>不完全解构</h4><ul>
+<li>未解构的，返回undefined</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">p</span>: [&#123;<span class="attr">y</span>: <span class="string">'world'</span>&#125;] &#125;;</span><br><span class="line"><span class="keyword">let</span> &#123;<span class="attr">p</span>: [&#123; y &#125;, x ] &#125; = obj;</span><br><span class="line"><span class="built_in">console</span>.log(x,y);<span class="comment">//undefined world</span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p><strong><em>End</em></strong></p>
+<p><strong><em>by wind-jyf</em></strong></p>
 
   </div>
 </article>
@@ -165,7 +209,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#解构赋值"><span class="toc-number">1.</span> <span class="toc-text">解构赋值</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#解构赋值"><span class="toc-number">1.</span> <span class="toc-text">解构赋值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#规则："><span class="toc-number">1.0.0.1.</span> <span class="toc-text">规则：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#剩余运算符"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">剩余运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解构默认值"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">解构默认值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对象模型的解构"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">对象模型的解构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#嵌套"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">嵌套</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不完全解构"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">不完全解构</span></a></li></ol></li></ol></li></ol></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
