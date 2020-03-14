@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="原型与原型链先来放张图片   要点 prototype _proto_ constructor 实例与原型 原型链 继承 new运算符的实现  prototype JS是一种基于原型的语言，每个对象拥有一个原型对象 对象以其原型为模板，从原型继承方法和属性 这些属性和方法定义在对象的构造器函数的prototype属性上，而非对象实例本身  构造函数与其原型的关系 每个函数都会有一个prototyp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原型与原型链">
+<meta property="og:url" content="http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/index.html">
+<meta property="og:site_name" content="jyf blog">
+<meta property="og:description" content="原型与原型链先来放张图片   要点 prototype _proto_ constructor 实例与原型 原型链 继承 new运算符的实现  prototype JS是一种基于原型的语言，每个对象拥有一个原型对象 对象以其原型为模板，从原型继承方法和属性 这些属性和方法定义在对象的构造器函数的prototype属性上，而非对象实例本身  构造函数与其原型的关系 每个函数都会有一个prototyp">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="file:///D:/2443165638/Image/C2C/561EB9D094FE8A333F0682975C059FC8.png">
+<meta property="og:image" content="file:///D:%5C2443165638%5CImage%5CC2C%5C78D27AB8118EF08136D344E24FAFFF5A.png">
+<meta property="og:image" content="file:///D:%5C2443165638%5CImage%5CC2C%5C5D7359FB3ECEBD9ABEE3E5CC90B555BC.png">
+<meta property="article:published_time" content="2020-03-14T07:13:31.839Z">
+<meta property="article:modified_time" content="2020-03-14T08:10:42.147Z">
+<meta property="article:author" content="wind-jyf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="file:///D:/2443165638/Image/C2C/561EB9D094FE8A333F0682975C059FC8.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>原型与原型链</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/03/13/%E3%80%90ES6%E3%80%91class/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/" target="_blank" rel="noopener"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&text=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&is_video=false&description=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=原型与原型链&body=Check out this article: http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&name=原型与原型链&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原型与原型链"><span class="toc-number">1.</span> <span class="toc-text">原型与原型链</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#要点"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">要点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#prototype"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">prototype</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#构造函数与其原型的关系"><span class="toc-number">1.0.0.2.0.1.</span> <span class="toc-text">构造函数与其原型的关系</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#proto"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">_proto_</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#constructor-NaN"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">constructor</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实例与原型"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">实例与原型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#原型链"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">原型链</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#继承"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">继承</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#instanceof"><span class="toc-number">1.0.0.7.0.1.</span> <span class="toc-text">instanceof</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#null"><span class="toc-number">1.0.0.8.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#new实现"><span class="toc-number">1.0.0.9.</span> <span class="toc-text">new实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结："><span class="toc-number">1.0.0.10.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        原型与原型链
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">jyf blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-03-14T07:13:31.839Z" itemprop="datePublished">2020-03-14</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="原型与原型链"><a href="#原型与原型链" class="headerlink" title="原型与原型链"></a>原型与原型链</h1><p>先来放张图片</p>
+<img src="file:///D:\2443165638\Image\C2C\561EB9D094FE8A333F0682975C059FC8.png" alt="img" style="zoom:80%;" />
+
+<h4 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h4><ul>
+<li>prototype</li>
+<li>_proto_</li>
+<li>constructor</li>
+<li>实例与原型</li>
+<li>原型链</li>
+<li>继承</li>
+<li>new运算符的实现</li>
+</ul>
+<h4 id="prototype"><a href="#prototype" class="headerlink" title="prototype"></a>prototype</h4><ol>
+<li>JS是一种基于原型的语言，每个对象拥有一个原型对象</li>
+<li>对象以其原型为模板，从原型继承方法和属性</li>
+<li>这些属性和方法定义在对象的构造器函数的prototype属性上，而非对象实例本身</li>
+</ol>
+<h6 id="构造函数与其原型的关系"><a href="#构造函数与其原型的关系" class="headerlink" title="构造函数与其原型的关系"></a>构造函数与其原型的关系<img src="file:///D:%5C2443165638%5CImage%5CC2C%5C78D27AB8118EF08136D344E24FAFFF5A.png" alt="img"></h6><ul>
+<li>每个函数都会有一个prototype属性，并且这个属性指向了一个对象</li>
+<li>并且在new的时候，将这个对象设为此实例的原型，也就是_proto_的指向</li>
+</ul>
+<h4 id="proto"><a href="#proto" class="headerlink" title="_proto_"></a>_proto_</h4><ul>
+<li>每一个JS对象（除了null）都具有的一个属性，叫_proto_</li>
+<li>这个属性会指向该对象的原型</li>
+</ul>
+<p>注：实例对象和构造函数均可以指向原型，那原型是否有属性指向构造函数或实例呢？</p>
+<h4 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h4><ul>
+<li>原型可以通过constructor指向构造函数</li>
+<li>但是原型不可以指向实例</li>
+</ul>
+<h4 id="实例与原型"><a href="#实例与原型" class="headerlink" title="实例与原型"></a>实例与原型</h4><ul>
+<li><p>当读取实例的属性时，如果找不到，就会查找原型中的属性，一直向上查找</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parent3</span>(<span class="params">age</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>&#123;</span><br><span class="line">        age</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p3 = parent3(<span class="number">50</span>);</span><br><span class="line"><span class="built_in">console</span>.log(p3.constructor);<span class="comment">//[Function: Object]</span></span><br></pre></td></tr></table></figure>
+
+<p>注：其实在实例中，并没有constructor属性，于是查找其原型，发现有constructor属性，且指向构造函数</p>
+</li>
+</ul>
+<h4 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h4><ul>
+<li>刚刚说原型也是一个对象，那么原型的原型是什么呢</li>
+<li>对象和构造函数不同，所以原型链其实是通过_proto_实现的</li>
+<li>理解构造函数与对象的区别</li>
+<li>构造函数也就是一个函数，每个函数都会有prototype属性指向原型对象</li>
+<li>而每个对象都会有_proto_属性，不会指向构造函数，只会指向对象</li>
+</ul>
+<h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><p>继承其实意味着赋值操作，但是JS并不会赋值对象的属性，只是在两个对象之间创建一个关联，所以另一个对象可以通过委托访问另一个对象的属性和函数</p>
+<h6 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h6><ul>
+<li>instanceof的原理是判断其原型是否在原型链上</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'foo'</span>;</span><br><span class="line">&#125;</span><br><span class="line">Foo.prototype.method = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'method'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Bar</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'bar'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> foo = <span class="keyword">new</span> Foo();</span><br><span class="line">Bar.prototype = foo; <span class="comment">//继承</span></span><br><span class="line"><span class="keyword">const</span> bar = <span class="keyword">new</span> Bar();</span><br><span class="line"><span class="built_in">console</span>.log(bar <span class="keyword">instanceof</span> Foo);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//因为Object.getPrototypeOf(bar) === Foo.prototype</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重写instanceof</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">instanceof_of</span>(<span class="params">L,R</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> O = R.prototype;</span><br><span class="line">    L = <span class="built_in">Object</span>.getPrototypeOf(L);</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(L === <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>  <span class="comment">//找到原型链的最底层，也未找到，所以不在其原型链上</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(O === L)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span> <span class="comment">//一旦找到，便返回true</span></span><br><span class="line">        &#125;</span><br><span class="line">        L = <span class="built_in">Object</span>.getPrototypeOf(L);<span class="comment">//顺着原型链向下找</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">C</span>(<span class="params"></span>)</span>&#123;&#125; </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">D</span>(<span class="params"></span>)</span>&#123;&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o = <span class="keyword">new</span> C();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(instanceof_of(o, C)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(instanceof_of(o, D)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用new实现继承</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="string">'animal'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Animal.prototype.run = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.value +<span class="string">' c'</span>+ <span class="string">'is running'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这里是关键，创建Animal的实例，并将该实例，并将该实例赋值给Cat.prototype</span></span><br><span class="line"><span class="comment">//相当于Cat.prototype._protp_ = Animal.prototype</span></span><br><span class="line">Cat.prototype = <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">const</span> cat = <span class="keyword">new</span> Cat();</span><br><span class="line"><span class="built_in">console</span>.log(cat.value);<span class="comment">//animal</span></span><br></pre></td></tr></table></figure>
+
+<p>图解：绿色这条链便是原型链继承</p>
+<p><img src="file:///D:%5C2443165638%5CImage%5CC2C%5C5D7359FB3ECEBD9ABEE3E5CC90B555BC.png" alt="img"></p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="new实现"><a href="#new实现" class="headerlink" title="new实现"></a>new实现</h4><p>new创建的实例有两大特性</p>
+<ul>
+<li>访问到构造函数里的属性</li>
+<li>访问原型链里的属性</li>
+</ul>
+<p>模拟实现：当new Foo()执行时，会发生以下事情：</p>
+<ol>
+<li><p>一个继承自Foo.prototype的新对象被创建</p>
+</li>
+<li><p>使用指定参数调用构造函数</p>
+</li>
+<li><p>由构造函数返回的对象就是new表达式的结果。如果</p>
+<p>构造函数没有显式返回一个对象，则使用步骤一创建的对象</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">     <span class="comment">//新建空对象</span></span><br><span class="line">     <span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"></span><br><span class="line">     <span class="comment">//获得构造函数,arguments中去除第一个参数</span></span><br><span class="line">     Con = [].shift.call(<span class="built_in">arguments</span>);<span class="comment">//也就是说，对arguments执行shift方法</span></span><br><span class="line">     <span class="comment">//Con拿到了第一个参数即构造函数，并且arguments删除了第一个参数</span></span><br><span class="line"></span><br><span class="line">     <span class="comment">//原型链进行链接</span></span><br><span class="line">     <span class="built_in">Object</span>.setPrototypeOf(obj,Con.prototype);</span><br><span class="line"></span><br><span class="line">     <span class="comment">//绑定this实现继承，obj可以访问到构造函数中的属性</span></span><br><span class="line">     Con.apply(obj,<span class="built_in">arguments</span>);</span><br><span class="line"></span><br><span class="line">     <span class="comment">//返回对象</span></span><br><span class="line">     <span class="keyword">return</span> obj;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">Car</span>(<span class="params">color</span>)</span>&#123;</span><br><span class="line">     <span class="keyword">this</span>.color = color;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> Car.prototype.start = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="keyword">this</span>.color + <span class="string">" car start"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">var</span> car = create(Car,<span class="string">"black"</span>);</span><br><span class="line"> <span class="built_in">console</span>.log(car.color);<span class="comment">//black</span></span><br><span class="line"> car.start();<span class="comment">//black car start</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h4><ol>
+<li>理解构造函数的原型和对象的原型并不是一回事</li>
+<li>原型链是基于对象上的，和构造函数无关，所以和prototype无关</li>
+<li>函数本身就会有prototype属性，指向一个对象。new实例的时候，需要将实例的原型链链上构造函数所指的对象</li>
+<li>继承并不是赋值属性，而是将两者存在一种关系，连接起来，可以访问，原型链继承就是这样实现的。</li>
+</ol>
+<hr>
+<p><strong><em>End</em></strong></p>
+<p><strong><em>by wind-jyf</em></strong></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原型与原型链"><span class="toc-number">1.</span> <span class="toc-text">原型与原型链</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#要点"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">要点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#prototype"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">prototype</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#构造函数与其原型的关系"><span class="toc-number">1.0.0.2.0.1.</span> <span class="toc-text">构造函数与其原型的关系</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#proto"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">_proto_</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#constructor-NaN"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">constructor</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实例与原型"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">实例与原型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#原型链"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">原型链</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#继承"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">继承</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#instanceof"><span class="toc-number">1.0.0.7.0.1.</span> <span class="toc-text">instanceof</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#null"><span class="toc-number">1.0.0.8.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#new实现"><span class="toc-number">1.0.0.9.</span> <span class="toc-text">new实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结："><span class="toc-number">1.0.0.10.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&text=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&is_video=false&description=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=原型与原型链&body=Check out this article: http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&title=原型与原型链" target="_blank" rel="noopener"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/&name=原型与原型链&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 wind-jyf
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
