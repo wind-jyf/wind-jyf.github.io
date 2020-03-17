@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="函数柯里化 apply,call,bind函数柯里化先上一道题目，如何设计一个函数完成下列计算 1234console.log(add(1, 2, 3));console.log(add(1)(2)(3));console.log(add(1, 2)(3));console.log(add(1)(2, 3));  思路 均是想要进行三个数相加 但是参数不同 可以不断的返回函数，得到后一个参数，直到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【JS】函数柯里化 apply,call,bind">
+<meta property="og:url" content="http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/index.html">
+<meta property="og:site_name" content="jyf blog">
+<meta property="og:description" content="函数柯里化 apply,call,bind函数柯里化先上一道题目，如何设计一个函数完成下列计算 1234console.log(add(1, 2, 3));console.log(add(1)(2)(3));console.log(add(1, 2)(3));console.log(add(1)(2, 3));  思路 均是想要进行三个数相加 但是参数不同 可以不断的返回函数，得到后一个参数，直到">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-17T08:50:48.850Z">
+<meta property="article:modified_time" content="2020-03-17T09:17:19.065Z">
+<meta property="article:author" content="wind-jyf">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【JS】函数柯里化 apply,call,bind</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/03/14/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/" target="_blank" rel="noopener"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&text=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&is_video=false&description=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【JS】函数柯里化 apply,call,bind&body=Check out this article: http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&name=【JS】函数柯里化 apply,call,bind&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#函数柯里化-apply-call-bind"><span class="toc-number">1.</span> <span class="toc-text">函数柯里化 apply,call,bind</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#函数柯里化"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">函数柯里化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#思路"><span class="toc-number">1.0.0.1.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现"><span class="toc-number">1.0.0.1.2.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#小结"><span class="toc-number">1.0.0.1.3.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#call-apply-bind实现"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">call,apply,bind实现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#思路-1"><span class="toc-number">1.0.0.2.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现call"><span class="toc-number">1.0.0.2.2.</span> <span class="toc-text">实现call</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#apply的实现"><span class="toc-number">1.0.0.2.3.</span> <span class="toc-text">apply的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#bind的实现"><span class="toc-number">1.0.0.2.4.</span> <span class="toc-text">bind的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#小结-1"><span class="toc-number">1.0.0.2.5.</span> <span class="toc-text">小结</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【JS】函数柯里化 apply,call,bind
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">jyf blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-03-17T08:50:48.850Z" itemprop="datePublished">2020-03-17</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="函数柯里化-apply-call-bind"><a href="#函数柯里化-apply-call-bind" class="headerlink" title="函数柯里化 apply,call,bind"></a>函数柯里化 apply,call,bind</h1><h4 id="函数柯里化"><a href="#函数柯里化" class="headerlink" title="函数柯里化"></a>函数柯里化</h4><p>先上一道题目，如何设计一个函数完成下列计算</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>, <span class="number">2</span>)(<span class="number">3</span>));</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>));</span><br></pre></td></tr></table></figure>
+
+<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><ol>
+<li>均是想要进行三个数相加</li>
+<li>但是参数不同</li>
+<li>可以不断的返回函数，得到后一个参数，直到把所有的参数均读取完成</li>
+<li>获取所有参数后，执行相加的操作</li>
+</ol>
+<h5 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> curry = <span class="function"><span class="keyword">function</span>(<span class="params">fn, ...args</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(args.length &gt;= fn.length)&#123;</span><br><span class="line">        <span class="keyword">return</span> fn(...args)  <span class="comment">//以获取完所有参数</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">..._args</span>)</span>&#123;  <span class="comment">//add的值，进行参数的获取</span></span><br><span class="line">            <span class="keyword">return</span> curry(fn, ...args, ..._args);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add1</span>(<span class="params">x, y, z</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x + y + z;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> add = curry(add1);<span class="comment">//add是curry这个函数，而不是curry的返回值</span></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>, <span class="number">2</span>)(<span class="number">3</span>));</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>首先add1便是相加的函数，它作为curry的参数传入，最后便于执行</li>
+<li>add被赋值了之后，其实是被返回了一个函数，而且此函数内部return了curry函数</li>
+<li>在执行curry函数时，首先判断是否获取完所有的参数</li>
+<li>如果没有，便通过返回函数来获取下一步参数</li>
+<li>如果获取完毕，则调用相加方法</li>
+</ul>
+<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><ol>
+<li>首先要判断参数是否获取完成</li>
+<li>通过返回一个函数，再进行不断的调用获取参数</li>
+</ol>
+<h4 id="call-apply-bind实现"><a href="#call-apply-bind实现" class="headerlink" title="call,apply,bind实现"></a>call,apply,bind实现</h4><h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><ol>
+<li>获取方法</li>
+<li>将方法加入到新对象中</li>
+<li>对方法进行调用</li>
+</ol>
+<h5 id="实现call"><a href="#实现call" class="headerlink" title="实现call"></a>实现call</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.myCall = <span class="function"><span class="keyword">function</span>(<span class="params">thisArg = window</span>) </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// thisArg为新对象，并获取当前的函数</span></span><br><span class="line">    thisArg.fn = <span class="keyword">this</span>;</span><br><span class="line">    <span class="comment">// 第一个参数为 this，所以要取剩下的参数</span></span><br><span class="line">    <span class="keyword">const</span> args = [...arguments].slice(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 执行函数</span></span><br><span class="line">    <span class="keyword">const</span> result = thisArg.fn(...args);</span><br><span class="line">    <span class="comment">// thisArg上并不存在fn，所以需要移除</span></span><br><span class="line">    <span class="keyword">delete</span> thisArg.fn;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">    name: <span class="string">'litterStar'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    foo.myCall(obj);</span><br><span class="line">&#125;</span><br><span class="line">bar();</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="apply的实现"><a href="#apply的实现" class="headerlink" title="apply的实现"></a>apply的实现</h5><ul>
+<li>和call只是参数不同</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.myApply = <span class="function"><span class="keyword">function</span>(<span class="params">thisArg = window</span>) </span>&#123;</span><br><span class="line">    thisArg.fn = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">let</span> result;</span><br><span class="line">    <span class="comment">// 判断是否有第二个参数</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">arguments</span>[<span class="number">1</span>]) &#123;</span><br><span class="line">        <span class="comment">// apply方法调用的时候第二个参数是数组，所以要展开arguments[1]之后再传入函数</span></span><br><span class="line">        result = thisArg.fn(...arguments[<span class="number">1</span>]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = thisArg.fn();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span> content.fn;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="bind的实现"><a href="#bind的实现" class="headerlink" title="bind的实现"></a>bind的实现</h5><ul>
+<li>bind会返回一个函数</li>
+<li>新函数的this指向应为参数的第一个</li>
+<li>其余参数作为新函数的参数</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.myBind = <span class="function"><span class="keyword">function</span>(<span class="params">thisArg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> fn = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">const</span> args = [...arguments].slice(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 返回一个新的函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 再次获取新的参数</span></span><br><span class="line">        <span class="keyword">const</span> newArgs = [...arguments];</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 1.修改当前函数的this为thisArg</span></span><br><span class="line"><span class="comment">         * 2.将多次传入的参数一次性传入函数中</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="keyword">return</span> fn.apply(thisArg, args.concat(newArgs))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj1 = &#123;</span><br><span class="line">    name: <span class="string">'litterStar'</span>,</span><br><span class="line">    getName() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> obj2 = &#123;</span><br><span class="line">    name: <span class="string">'luckyStar'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fn = obj1.getName.myBind(obj2)</span><br><span class="line">fn(); <span class="comment">// luckyStar</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h5><ul>
+<li>bind其实就是在返回函数中进行call或者apply，也就是this指向的改变</li>
+<li>this指向的改变，均是将其方法加入到新对象中</li>
+</ul>
+<hr>
+<p><strong><em>End</em></strong></p>
+<p><strong><em>by wind-jyf</em></strong></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#函数柯里化-apply-call-bind"><span class="toc-number">1.</span> <span class="toc-text">函数柯里化 apply,call,bind</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#函数柯里化"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">函数柯里化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#思路"><span class="toc-number">1.0.0.1.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现"><span class="toc-number">1.0.0.1.2.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#小结"><span class="toc-number">1.0.0.1.3.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#call-apply-bind实现"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">call,apply,bind实现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#思路-1"><span class="toc-number">1.0.0.2.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现call"><span class="toc-number">1.0.0.2.2.</span> <span class="toc-text">实现call</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#apply的实现"><span class="toc-number">1.0.0.2.3.</span> <span class="toc-text">apply的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#bind的实现"><span class="toc-number">1.0.0.2.4.</span> <span class="toc-text">bind的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#小结-1"><span class="toc-number">1.0.0.2.5.</span> <span class="toc-text">小结</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&text=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&is_video=false&description=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【JS】函数柯里化 apply,call,bind&body=Check out this article: http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&title=【JS】函数柯里化 apply,call,bind" target="_blank" rel="noopener"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/17/%E3%80%90JS%E3%80%91%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96%20apply,call,bind/&name=【JS】函数柯里化 apply,call,bind&description=" target="_blank" rel="noopener"><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 wind-jyf
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/wind-jyf" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
